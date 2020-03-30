@@ -9,10 +9,7 @@ from pathlib import Path
 import csv
 import pandas as pd
 
-dict1 = {} 
-
-
-def countEventsCode(data_frame, current_date): 
+def countEventsCode(dict1, data_frame, current_date): 
     if current_date not in dict1:
         dict1[current_date] = {}
 
@@ -39,18 +36,17 @@ def countEventsCode(data_frame, current_date):
             dict1[current_date][country2][eventCode] += 1
 
 
-def outputCSV():
-    
-    total_dataframe=pd.DataFrame()
+def outputCSV(dict1):
+    outputfolder = './output_csvs/'
 
-    print(total_dataframe)
+    total_dataframe=pd.DataFrame()
 
     for date in dict1:
         for country in dict1[date]:
             country_frame=pd.DataFrame(dict1[date][country],index=[country])
             
             total_dataframe=pd.concat([total_dataframe,country_frame])
-    total_dataframe.to_csv(str(date)+'.csv')
+    total_dataframe.to_csv(outputfolder + str(date)+'.csv')
 
 def extract(): 
     params=['GLOBALEVENTID', 'SQLDATE', 'MonthYear', 'Year', 'FractionDate', 
@@ -71,20 +67,26 @@ def extract():
      'ActionGeo_CountryCode', 'ActionGeo_ADM1Code', 'ActionGeo_Lat', 
      'ActionGeo_Long', 'ActionGeo_FeatureID', 'DATEADDED', 'SOURCEURL']
 
-#    csvs_path = "unzipped_csvs"
-#    full_path = join(abspath(getcwd()), csvs_path, "*.CSV") 
+    csvs_path = "unzipped_csvs"
+    full_path = join(abspath(getcwd()), csvs_path, "*.CSV") 
      
-    test = pd.read_csv("C:/Users/Omar/documents/comp_541/unzipped_csvs/20190101.export.CSV", names=params, index_col=False, low_memory=False)
-    countEventsCode(test, 20190101)
+    # test = pd.read_csv("C:/Users/Omar/documents/comp_541/unzipped_csvs/20190101.export.CSV", names=params, index_col=False, low_memory=False)
+    # countEventsCode(test, 20190101)
 
+    for csv in glob(full_path):
+        dict1 = {} 
+        p = Path(csv)
+        split_date = p.name.split('.')
+        current_date = split_date[0]
 
-def frame_from_dict():
-#    for country in dict1[]
-    frame=pd.DataFrame.from_dict(dict1)
-    print(frame)
+        csv_reader = pd.read_csv(csv, names=params, index_col=False, low_memory=False)
+
+        countEventsCode(dict1, csv_reader, current_date)
+
+        outputCSV(dict1)
+
 
 if __name__ == "__main__":
     extract()
-    total_dataframe=outputCSV()
-#    print(dict1)
+
     
