@@ -81,22 +81,26 @@ def extract():
     csvs_path = "unzipped_csvs"
     full_path = join(abspath(getcwd()), csvs_path, "*.CSV") 
      
-    test = pd.read_csv("/Users/timothylee/School/data-mining-project/src/unzipped_csvs/20190101.export.CSV", names=params, index_col=False, low_memory=False)
-    countEventsCode(test, 20190101)
-    # for csv in glob(full_path):
-    #     p = Path(csv)
-    #     split_date = p.name.split('.')
-    #     current_date = split_date[0]
+    # for testing 1 file  
+    # test = pd.read_csv("/Users/timothylee/School/data-mining-project/src/unzipped_csvs/20190101.export.CSV", names=params, index_col=False, low_memory=False)
+    # countEventsCode(test, 20190101)
+    # end for testing 1 files 
 
-    #     csv_reader = pd.read_csv(csv, names=params, index_col=False, low_memory=False)
+    # reading all csv files in folder 
+    for csv in glob(full_path):
+        p = Path(csv)
+        split_date = p.name.split('.')
+        current_date = split_date[0]
 
-    #     countEventsCode(csv_reader, current_date)
+        csv_reader = pd.read_csv(csv, names=params, index_col=False, low_memory=False)
 
-    #     # print(dict)
+        countEventsCode(csv_reader, current_date)
+
+        # print(dict)
         
 
 if __name__ == "__main__":
     extract()
-    outputCSV()
-    print(dict)
+    # outputCSV()
+    # print(dict)
     
