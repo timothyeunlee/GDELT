@@ -1,6 +1,4 @@
 # mac_os files 
 .DS_Store
-# test outputs 
-output.csv
 # csv files 
 unzipped_csvs/
