@@ -45,15 +45,12 @@ def outputCSV():
 
     print(total_dataframe)
 
-    with open('output.csv', 'w',newline='') as csv_file: 
-        csvwriter = csv.writer(csv_file, delimiter='\t')
-        for date in dict1:
-            for country in dict1[date]:
-                country_frame=pd.DataFrame(dict1[date][country],index=[country])
-                
-                total_dataframe=pd.concat([total_dataframe,country_frame])
-                
-    return(total_dataframe)
+    for date in dict1:
+        for country in dict1[date]:
+            country_frame=pd.DataFrame(dict1[date][country],index=[country])
+            
+            total_dataframe=pd.concat([total_dataframe,country_frame])
+    total_dataframe.to_csv(str(date)+'.csv')
 
 def extract(): 
     params=['GLOBALEVENTID', 'SQLDATE', 'MonthYear', 'Year', 'FractionDate', 
@@ -74,8 +71,8 @@ def extract():
      'ActionGeo_CountryCode', 'ActionGeo_ADM1Code', 'ActionGeo_Lat', 
      'ActionGeo_Long', 'ActionGeo_FeatureID', 'DATEADDED', 'SOURCEURL']
 
-    csvs_path = "unzipped_csvs"
-    full_path = join(abspath(getcwd()), csvs_path, "*.CSV") 
+#    csvs_path = "unzipped_csvs"
+#    full_path = join(abspath(getcwd()), csvs_path, "*.CSV") 
      
     test = pd.read_csv("C:/Users/Omar/documents/comp_541/unzipped_csvs/20190101.export.CSV", names=params, index_col=False, low_memory=False)
     countEventsCode(test, 20190101)
