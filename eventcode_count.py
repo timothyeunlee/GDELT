@@ -69,7 +69,7 @@ def extract():
 
     csvs_path = "unzipped_csvs"
     full_path = join(abspath(getcwd()), csvs_path, "*.CSV") 
-     
+
     # test = pd.read_csv("C:/Users/Omar/documents/comp_541/unzipped_csvs/20190101.export.CSV", names=params, index_col=False, low_memory=False)
     # countEventsCode(test, 20190101)
 
@@ -88,5 +88,6 @@ def extract():
 
 if __name__ == "__main__":
     extract()
+
 
     
