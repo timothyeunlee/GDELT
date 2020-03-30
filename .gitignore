@@ -1,0 +1,4 @@
+# mac_os files 
+.DS_Store
+# csv files 
+unzipped_csvs/
