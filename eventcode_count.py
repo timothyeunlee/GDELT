@@ -18,13 +18,13 @@ def countEventsCode(dict1, data_frame, current_date):
         country2 = str(row.Actor2CountryCode)
         eventCode = str(row.EventCode)
 
-        # country doesnt exist  
+        # country doesnt exist add to dict
         if country1 not in dict1[current_date]:
             dict1[current_date][country1] = {} 
         if country2 not in dict1[current_date]:
             dict1[current_date][country2] = {} 
 
-        # check eventCode per country    
+        # check eventCode per country and increase amount
         if eventCode not in dict1[current_date][country1]: 
             dict1[current_date][country1][eventCode] = 1
         else:
