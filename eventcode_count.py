@@ -7,13 +7,14 @@ from os.path import join, abspath
 from os import listdir, getcwd
 from pathlib import Path
 import csv
+import pandas as pd
 
-dict = {} 
+dict1 = {} 
 
 
 def countEventsCode(data_frame, current_date): 
-    if current_date not in dict:
-        dict[current_date] = {}
+    if current_date not in dict1:
+        dict1[current_date] = {}
 
     for row in data_frame.itertuples(): 
         country1 = str(row.Actor1CountryCode)
@@ -21,43 +22,38 @@ def countEventsCode(data_frame, current_date):
         eventCode = str(row.EventCode)
 
         # country doesnt exist  
-        if country1 not in dict[current_date]:
-            dict[current_date][country1] = {} 
-        if country2 not in dict[current_date]:
-            dict[current_date][country2] = {} 
+        if country1 not in dict1[current_date]:
+            dict1[current_date][country1] = {} 
+        if country2 not in dict1[current_date]:
+            dict1[current_date][country2] = {} 
 
         # check eventCode per country    
-        if eventCode not in dict[current_date][country1]: 
-            dict[current_date][country1][eventCode] = 1
+        if eventCode not in dict1[current_date][country1]: 
+            dict1[current_date][country1][eventCode] = 1
         else:
-            dict[current_date][country1][eventCode] += 1
+            dict1[current_date][country1][eventCode] += 1
 
-        if eventCode not in dict[current_date][country2]: 
-            dict[current_date][country2][eventCode] = 1
+        if eventCode not in dict1[current_date][country2]: 
+            dict1[current_date][country2][eventCode] = 1
         else:
-            dict[current_date][country2][eventCode] += 1
+            dict1[current_date][country2][eventCode] += 1
 
 
 def outputCSV():
-    fields = ['date', 'country', 'eventCode', 'amount']
     
-    with open('output.csv', 'w') as csv_file: 
+    total_dataframe=pd.DataFrame()
+
+    print(total_dataframe)
+
+    with open('output.csv', 'w',newline='') as csv_file: 
         csvwriter = csv.writer(csv_file, delimiter='\t')
-
-        for date in dict: 
-            for country in dict[date]:
-                for event in dict[date][country]:  
-                    count = dict[date][country][event]
-                    csvwriter.writerow([dict[date], dict[date][country], dict[date][country][event], count])
-
-
-# with open('output.csv', 'w') as csv_file:
-#     csvwriter = csv.writer(csv_file, delimiter='\t')
-#     for session in users_item:
-#         for item in users_item[session]:
-#             csvwriter.writerow([session, item, users_item[session][item]])
-
-
+        for date in dict1:
+            for country in dict1[date]:
+                country_frame=pd.DataFrame(dict1[date][country],index=[country])
+                
+                total_dataframe=pd.concat([total_dataframe,country_frame])
+                
+    return(total_dataframe)
 
 def extract(): 
     params=['GLOBALEVENTID', 'SQLDATE', 'MonthYear', 'Year', 'FractionDate', 
@@ -81,22 +77,17 @@ def extract():
     csvs_path = "unzipped_csvs"
     full_path = join(abspath(getcwd()), csvs_path, "*.CSV") 
      
-    test = pd.read_csv("/Users/timothylee/School/data-mining-project/src/unzipped_csvs/20190101.export.CSV", names=params, index_col=False, low_memory=False)
+    test = pd.read_csv("C:/Users/Omar/documents/comp_541/unzipped_csvs/20190101.export.CSV", names=params, index_col=False, low_memory=False)
     countEventsCode(test, 20190101)
-    # for csv in glob(full_path):
-    #     p = Path(csv)
-    #     split_date = p.name.split('.')
-    #     current_date = split_date[0]
 
-    #     csv_reader = pd.read_csv(csv, names=params, index_col=False, low_memory=False)
 
-    #     countEventsCode(csv_reader, current_date)
-
-    #     # print(dict)
-        
+def frame_from_dict():
+#    for country in dict1[]
+    frame=pd.DataFrame.from_dict(dict1)
+    print(frame)
 
 if __name__ == "__main__":
     extract()
-    outputCSV()
-    print(dict)
+    total_dataframe=outputCSV()
+#    print(dict1)
     
