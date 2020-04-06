@@ -2,3 +2,4 @@
 .DS_Store
 # csv files 
 unzipped_csvs/
+its_raw/
